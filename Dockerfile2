@@ -1,0 +1,26 @@
+FROM ubuntu:16.04
+
+# Install required libraries and apps
+RUN apt-get autoremove
+RUN apt-get autoclean
+RUN apt-get update && apt-get install -y build-essential wget curl openjdk-8-jdk firefox git unzip ssh vim && \
+curl -o /usr/local/bin/jq http://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/local/bin/jq && \
+curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh && \
+chmod 755 nodesource_setup.sh && bash nodesource_setup.sh 
+
+# Install required libraries and apps
+RUN apt-get install -y nodejs libappindicator3-1 libasound2 libatk-bridge2.0-0 \
+    libatk1.0-0 libatspi2.0-0 libcairo2 libcups2 libdbus-1-3 fonts-liberation \
+    dbus-x11 xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic xfonts-scalable \
+    libxss1 lsb-release xdg-utils libnspr4
+
+# Install google-chrome
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i --force-depends google-chrome-stable_current_amd64.deb
+
+# Install aws-cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+unzip awscliv2.zip && ./aws/install
+
+# Run npm tests
+CMD ["/bin/bash"]
